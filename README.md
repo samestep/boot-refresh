@@ -1,5 +1,7 @@
 # boot-refresh
 
+[![Clojars Project][clojars badge]][clojars]
+
 [Boot] task to reload code using [`clojure.tools.namespace`][tools.namespace].
 
 ## Usage
@@ -32,4 +34,6 @@ to immediately use the new code from your REPL.
 
 [boot]: http://boot-clj.com/
 [cider]: https://github.com/clojure-emacs/cider
+[clojars]: https://clojars.org/samestep/boot-refresh
+[clojars badge]: https://clojars.org/samestep/boot-refresh/latest-version.svg
 [tools.namespace]: https://github.com/clojure/tools.namespace
