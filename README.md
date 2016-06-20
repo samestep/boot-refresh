@@ -9,8 +9,7 @@
 In `build.boot`, add `boot-refresh` to your dependencies and `require` the task:
 
 ```clojure
-(merge-env!
- :dependencies '[[samestep/boot-refresh "0.1.0-SNAPSHOT" :scope "test"]])
+(merge-env! :dependencies '[[samestep/boot-refresh "0.1.0" :scope "test"]])
 
 (require '[samestep.boot-refresh :refer [refresh]])
 ```
