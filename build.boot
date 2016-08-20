@@ -1,5 +1,5 @@
 (set-env!
- :source-paths #{"src"}
+ :resource-paths #{"src"}
  :dependencies '[[org.clojure/clojure "1.8.0" :scope "provided"]
                  [boot/core "2.6.0" :scope "provided"]
                  [org.clojure/tools.namespace "0.2.11"]
@@ -9,7 +9,7 @@
 
 (def +version+ "0.1.0")
 
-(bootlaces! +version+)
+(bootlaces! +version+ :dont-modify-paths? true)
 
 (task-options!
  pom {:project 'samestep/boot-refresh
