@@ -18,3 +18,13 @@
       :url "https://github.com/samestep/boot-refresh"
       :scm {:url "https://github.com/samestep/boot-refresh"}
       :license {"MIT License" "https://opensource.org/licenses/MIT"}})
+
+(deftask dev
+  "Dev process"
+  []
+  (comp
+    (watch)
+    (repl :server true)
+    (pom)
+    (jar)
+    (install)))
