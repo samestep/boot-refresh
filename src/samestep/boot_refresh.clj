@@ -1,10 +1,9 @@
 (ns samestep.boot-refresh
   {:boot/export-tasks true}
   (:require [boot.core :as boot]
+            [boot.pod :as pod]
             [boot.util :as util]
-            [clojure.tools.namespace.dir :as dir]
-            [clojure.tools.namespace.track :as track]
-            [clojure.tools.namespace.reload :as reload]))
+            [samestep.boot-refresh.impl :as impl]))
 
 (boot/deftask refresh
   "Reload all changed namespaces on the classpath.
@@ -12,24 +11,18 @@
   Throws an exception in the case of failure."
   []
   (let [tracker (atom nil)
-        filter-ns (fn [ns] (filter find-ns ns))]
+        deps '[[org.clojure/tools.namespace "0.3.0-alpha3"]]]
     (boot/with-pass-thru _
-      (swap! tracker
-             (fn [tracker]
-               (util/dbug "Scan directories: %s\n" (pr-str (boot/get-env :directories)))
-               (-> (or tracker (track/tracker))
-                   (dir/scan-dirs (boot/get-env :directories))
-                   ;; Only reload namespaces which are already loaded
-                   (update ::track/load filter-ns)
-                   (update ::track/unload filter-ns))))
-      (util/info "Unload: %s\n" (pr-str (::track/unload @tracker)))
-      (util/info "Load: %s\n" (pr-str (::track/load @tracker)))
-      (swap! tracker reload/track-reload)
-      (try
-        (when (::reload/error @tracker)
-          (util/fail "Error reloading: %s\n" (name (::reload/error-ns @tracker)))
-          (throw (::reload/error @tracker)))
-        (catch java.io.FileNotFoundException e
-          (util/info "Resetting tracker due to file not found exception, all namespaces will be reloaded next time.\n")
-          (reset! tracker (track/tracker))
-          (throw e))))))
+      (util/info "Refreshing parent environment\n")
+      (impl/refresh-env tracker (boot/get-env :directories))
+      (doseq [pod (remove #(= "worker" (pod/pod-name %)) (keys pod/pods))]
+        (pod/with-eval-in pod
+          (require 'boot.pod
+                   'boot.util)
+          (boot.pod/add-dependencies-in (.get boot.pod/this-pod)
+                                        (update-in boot.pod/env [:dependencies] into '~deps))
+          (require 'samestep.boot-refresh.impl
+                   'clojure.tools.namespace.track)
+          (boot.util/info "Refreshing pod environment\n")
+          (defonce tracker (atom (clojure.tools.namespace.track/tracker)))
+          (samestep.boot-refresh.impl/refresh-env tracker (:directories boot.pod/env)))))))
