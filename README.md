@@ -31,6 +31,17 @@ The `refresh` task works best with [CIDER]:
 If you modify any of your source files and save your changes, you should be able
 to immediately use the new code from your REPL.
 
+## Development
+
+To work on `boot-refresh` itself, you can use the provided `dev` task:
+
+```sh
+boot dev
+```
+
+This will start a watch loop that will reinstall the jar whenever one of
+`boot-refresh`'s files changes.
+
 [boot]: http://boot-clj.com/
 [cider]: https://github.com/clojure-emacs/cider
 [clojars]: https://clojars.org/samestep/boot-refresh
