@@ -23,8 +23,8 @@
   "Dev process"
   []
   (comp
-    (watch)
-    (repl :server true)
-    (pom)
-    (jar)
-    (install)))
+   (watch)
+   (repl :server true)
+   (pom)
+   (jar)
+   (install)))
