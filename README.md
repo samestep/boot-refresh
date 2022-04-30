@@ -42,7 +42,7 @@ boot dev
 This will start a watch loop that will reinstall the jar whenever one of
 `boot-refresh`'s files changes.
 
-[boot]: http://boot-clj.com/
+[boot]: https://boot-clj.github.io/
 [cider]: https://github.com/clojure-emacs/cider
 [clojars]: https://clojars.org/samestep/boot-refresh
 [clojars badge]: https://clojars.org/samestep/boot-refresh/latest-version.svg
